@@ -5,7 +5,11 @@ class window.Hand extends Backbone.Collection
   initialize: (array, @deck, @isDealer, @wins = 0) ->
   hit: ->
     @add(@deck.pop()).last()
-    if @scores() > 21 then @bust()
+    if @scores() > 21
+      console.log('triggered bust')
+      @trigger 'bust'
+    else
+      @trigger 'hit'
 
   stand: ->
     console.log('triggered stand')
