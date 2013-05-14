@@ -12,6 +12,7 @@ class window.Hand extends Backbone.Collection
     @trigger 'stand'
 
   bust: ->
+    console.log('triggered bust')
     @trigger 'bust'
 
   scores: ->
@@ -25,9 +26,9 @@ class window.Hand extends Backbone.Collection
       score + if card.get 'revealed' then card.get 'value' else 0
     , 0
     arrayScore = if hasAce then [score, score + 10] else [score]
-    if arrayScore.length == 2
-    then if arrayScore[1] <= 21 then arrayScore[1]
-    else arrayScore[0]
+    if arrayScore.length == 2 and arrayScore[1] <= 21
+    then return  arrayScore[1]
+    arrayScore[0]
 
 
 #identify the rules "both > 21 lose"
