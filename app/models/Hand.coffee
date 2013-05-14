@@ -3,18 +3,18 @@ class window.Hand extends Backbone.Collection
   model: Card
 
   initialize: (array, @deck, @isDealer) ->
-    console.log(array) 
   hit: ->
     @add(@deck.pop()).last()
-    console.log(@checkScore())
     if @checkScore() then @bust()
 
+  stand: ->
+    @trigger 'stand'
+
   checkScore: ->
-    @scores() > 21
+    @scores() > 21  ##figure out biggest number possible
 
   bust: ->
-    Backbone.trigger('bust')
-    console.log("bust")
+    @trigger 'bust'
 
   scores: ->
     # The scores are an array of potential scores.

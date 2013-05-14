@@ -5,11 +5,9 @@ class window.App extends Backbone.Model
     @set 'deck', deck = new Deck()
     @set 'playerHand', deck.dealPlayer()
     @set 'dealerHand', deck.dealDealer()
+    @get('playerHand').on("stand", @dealerPlays)
 
-
-
-
-
-#identify the rules "both > 21 lose"
-#player will win 21, unless dealer has 21
-#find out if "you" win after getting 5 cards without going over 21
+  dealerPlays: =>
+    console.log('dealerPlays')
+    @get('dealerHand').at(0).flip();
+    if @get('dealerHand').scores()[0] >= @get('playerHand').scores()[0] then console.log("winner")
