@@ -2,16 +2,14 @@ class window.Hand extends Backbone.Collection
 
   model: Card
 
-  initialize: (array, @deck, @isDealer) ->
+  initialize: (array, @deck, @isDealer, @wins = 0) ->
   hit: ->
     @add(@deck.pop()).last()
-    if @checkScore() then @bust()
+    if @scores() > 21 then @bust()
 
   stand: ->
+    console.log('triggered stand')
     @trigger 'stand'
-
-  checkScore: ->
-    @scores() > 21  ##figure out biggest number possible
 
   bust: ->
     @trigger 'bust'
@@ -26,7 +24,10 @@ class window.Hand extends Backbone.Collection
     score = @reduce (score, card) ->
       score + if card.get 'revealed' then card.get 'value' else 0
     , 0
-    if hasAce then [score, score + 10] else [score]
+    arrayScore = if hasAce then [score, score + 10] else [score]
+    if arrayScore.length == 2
+    then if arrayScore[1] <= 21 then arrayScore[1]
+    else arrayScore[0]
 
 
 #identify the rules "both > 21 lose"
