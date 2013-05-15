@@ -9,58 +9,67 @@ class window.App extends Backbone.Model
     @set 'dealerHand', deck.dealDealer()
     @set 'dealerScore', null
     @set 'dealerWins', 0
+    @bindListeners()
+
+  bindListeners: =>
     @get('playerHand').on("stand bust", @dealerLogic)
     @get('dealerHand').on("hit", @dealerLogic)
     @get('dealerHand').on("stand bust", @checkWhoWins)
-    @set 'variable', 'hello'
 
   dealerLogic: =>
     console.log('dealerLogic')
     if @get('dealerHand').at(0).get('revealed') == false then @get('dealerHand').at(0).flip()
     @dealerScore = @get('dealerHand').scores()
+    console.log(@dealerScore)
     @playerScore = @get('playerHand').scores()
+    console.log(@playerScore)
     console.log("dealer score:", @dealerScore, "player score:", @playerScore)
-    if @dealerScore < 17
+    if @dealerScore <= 17
       console.log('dealer hits')
       @get('dealerHand').hit()
-    else if @dealerScore <= 21
+    else if @dealerScore <= 21 and @playerScore > @dealerScore
+      console.log('dealer hits')
+      @get('dealerHand').hit()
+    else
       console.log 'dealer stands'
       @get('dealerHand').stand()
 
 
   checkWhoWins: =>
     console.log('checking who won')
-    if @dealerScore <= 21 and @playerScore > 21
+    if @playerScore > 21
+      @dealerWins()
+    else if @dealerScore <= 21 and @playerScore >= 21
       console.log(1)
       @dealerWins()
     else if @playerScore <= 21 and @dealerScore > 21
       console.log(2)
       @playerWins()
-    else if @dealerScore >= @playerSocre
+    else if @dealerScore >= @playerScore
       console.log(3)
       @dealerWins()
     else
-      console.log(4)
       @playerWins()
 
   dealerWins: =>
     @set('dealerWins', @get('dealerWins')+1)
-    console.log 'Dealer wins!'
+    console.log 'Dealer WINS!'
+    console.log("dealer score:", @dealerScore, "player score:", @playerScore)
     console.log("dealerWins: ", @get('dealerWins'), ", playerWins:", @get('playerWins'))
-    # @redeal()
+    setTimeout @redeal, 2000
 
   playerWins: =>
     @set('playerWins', @get('playerWins')+1)
-    console.log 'Player wins!'
+    console.log 'Player WINS!'
+    console.log("dealer score:", @dealerScore, "player score:", @playerScore)
     console.log("dealerWins: ", @get('dealerWins'), ", playerWins:", @get('playerWins'))
-    # @redeal()
+    setTimeout @redeal, 2000
 
-  # redeal: =>
-  #   console.log('redeal')
-  #   @set 'deck', deck = new Deck()
-  #   @set 'playerHand', deck.dealPlayer()
-  #   console.log('player hand:', @get('playerHand'))
-  #   console.log('dealer hand:', @get('dealerHand'))
-  #   @set 'dealerHand', deck.dealDealer()
+  redeal: =>
+    console.log('redeal')
+    @set 'deck', deck = new Deck()
+    @set 'playerHand', deck.dealPlayer()
+    @set 'dealerHand', deck.dealDealer()
+    @bindListeners()
 
 
